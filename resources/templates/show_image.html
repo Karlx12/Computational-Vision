@@ -9,6 +9,7 @@
     <h1>Resultado de la predicción</h1>
     <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Imagen subida" width="300">
     <h2>La planta está {{ predictions }}</h2>
+    <h2>Con una probabilidad de {{ confidence }}</h2>
     <button><a href="{{ url_for('index') }}">Volver</a></button>
     
 </body>

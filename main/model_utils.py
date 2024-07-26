@@ -1,3 +1,4 @@
+
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
@@ -5,8 +6,10 @@ import numpy as np
 import os
 
 # Cargar el modelo
-model_path = os.path.join(os.path.dirname(__file__), 'models', 'cotton_vgg16.h5')
-model = load_model(model_path)
+
+
+class_indices = { 'Pulgones (Aphids)': 0, 'Gusanos (Army worm)': 1, 'Plaga Bacteriana (Bacterial Blight)': 2, 'Sana': 3, 'Hongos (Powdery Mildew)': 4, 'Manchas (Target spot)': 5 }
+labels = {v: k for k, v in class_indices.items()}
 
 # Función para preprocesar la imagen
 def preprocess_image(image_path, target_size=(224, 224)):
@@ -17,16 +20,20 @@ def preprocess_image(image_path, target_size=(224, 224)):
     return img_array
 
 # Función para hacer la predicción
-def predict_image(image_path):
+def predict_image(model_path,image_path):
+    print("Cargando Predicción............")
     img_array = preprocess_image(image_path)
-    class_indices = { 'Pulgones (Aphids)': 0, 'Gusanos (Army worm)': 1, 'Plaga Bacteriana (Bacterial Blight)': 2, 'Sana': 3, 'Hongos (Powdery Mildew)': 4, 'Manchas (Target spot)': 5 }
-    labels = {v: k for k, v in class_indices.items()}
+    
+    print(model_path)
+    model = load_model(model_path)
+    
     predictions = model.predict(img_array)
     predicted_class = np.argmax(predictions, axis=1)
-    predicted_label = labels[predicted_class[0]]
-    print("\n",predicted_class[0])
-    print("\n",predicted_label)
+    confidence = float (predictions[0][predicted_class])
+
+    predicted_label = labels[predicted_class[0]] 
+    
     
     if predicted_class[0]!=3:
         predicted_label="enferma con la enfermedad: "+predicted_label        
-    return predicted_label
+    return predicted_label, str.format("{:.2%}", confidence)

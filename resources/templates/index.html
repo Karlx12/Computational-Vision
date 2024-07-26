@@ -1,15 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir una imagen para predicción</title>
+    <title>Página de Inicio</title>
+    <style>
+        .thumbnail {
+            width: 150px; /* Tamaño fijo para las miniaturas */
+            height: 150px;
+            object-fit: cover;
+            margin: 5px;
+        }
+        .thumbnail-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .thumbnail-wrapper {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 150px; /* Asegúrate de que el contenedor tenga el mismo ancho que las imágenes */
+            text-align: center; /* Centrar el texto */
+        }
+        .thumbnail-wrapper p {
+            margin: 5px 0 0 0; /* Espacio entre la imagen y el texto */
+            font-size: 14px; /* Tamaño de fuente fijo */
+            word-wrap: break-word; /* Permite que el texto se ajuste al contenedor */
+        }
+    </style>
 </head>
 <body>
-    <h1>Subir una imagen para predicción</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
-        <input type="submit" value="Subir y predecir">
+    <h1>Sube una imagen para predecir</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <select name="model">
+            {% for model in models %}
+                <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Subir">
     </form>
+
+    {% if models %}
+        <h2>Imágenes Subidas</h2>
+        <div class="thumbnail-container">
+            {% for file in files %}
+                <div class="thumbnail-wrapper">
+                    <a href="{{ url_for('uploaded_file', filename=file) }}?model={{ selected_model }}">
+                        <img src="{{ url_for('static', filename='uploads/' ~ file) }}" class="thumbnail" alt="{{ file }}">
+                    </a>
+                    <p>{{ file }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No hay modelos cargados.</p>
+    {% endif %}
 </body>
 </html>
