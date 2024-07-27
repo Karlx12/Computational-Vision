@@ -1,0 +1,159 @@
+/* styles.css */
+
+/* Estilos Generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo de los Títulos */
+h1, h2 {
+    color: #4CAF50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 1.8em;
+    font-weight: normal;
+}
+
+/* Centrar la Imagen */
+.image-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Centrar el Botón */
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Estilizar el Formulario */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+input[type="file"], select, input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45A049;
+}
+
+/* Miniaturas */
+.thumbnail-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thumbnail-wrapper {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+    position: relative;
+}
+
+.thumbnail-wrapper p {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 5px;
+}
+
+.delete-button {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.thumbnail-wrapper:hover .delete-button {
+    display: block;
+}
+
+/* Spinner */
+.spinner {
+    display: none;
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Deshabilitar botón de enviar durante la carga */
+.loading #submit-button {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Botón de Regreso */
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+button:hover {
+    background-color: #45A049;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}

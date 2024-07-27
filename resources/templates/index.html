@@ -3,41 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Página de Inicio</title>
-    <style>
-        .thumbnail {
-            width: 150px; /* Tamaño fijo para las miniaturas */
-            height: 150px;
-            object-fit: cover;
-            margin: 5px;
-        }
-        .thumbnail-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .thumbnail-wrapper {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            width: 150px; /* Asegúrate de que el contenedor tenga el mismo ancho que las imágenes */
-            text-align: center; /* Centrar el texto */
-        }
-        .thumbnail-wrapper p {
-            margin: 5px 0 0 0; /* Espacio entre la imagen y el texto */
-            font-size: 14px; /* Tamaño de fuente fijo */
-            word-wrap: break-word; /* Permite que el texto se ajuste al contenedor */
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/styles.css') }}">
 </head>
 <body>
     <h1>Sube una imagen para predecir</h1>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" required>
         <select name="model">
             {% for model in models %}
                 <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Subir">
+        <input id="submit-button" type="submit" value="Subir">
     </form>
 
     {% if models %}
@@ -45,7 +22,8 @@
         <div class="thumbnail-container">
             {% for file in files %}
                 <div class="thumbnail-wrapper">
-                    <a href="{{ url_for('uploaded_file', filename=file) }}?model={{ selected_model }}">
+                    <button class="delete-button" onclick="deleteImage('{{ file }}')">X</button>
+                    <a href="{{ url_for('uploaded_file', filename=file) }}">
                         <img src="{{ url_for('static', filename='uploads/' ~ file) }}" class="thumbnail" alt="{{ file }}">
                     </a>
                     <p>{{ file }}</p>
@@ -55,5 +33,58 @@
     {% else %}
         <p>No hay modelos cargados.</p>
     {% endif %}
+
+    <!-- Spinner -->
+    <div class="spinner" id="spinner"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            showSpinner();
+            var formData = new FormData(this);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = data.redirect_url;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                hideSpinner();
+            });
+        });
+
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block';
+            document.body.classList.add('loading');
+        }
+
+        function hideSpinner() {
+            document.getElementById('spinner').style.display = 'none';
+            document.body.classList.remove('loading');
+        }
+
+        function deleteImage(filename) {
+            if (confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
+                fetch('/delete_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filename: filename }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Error al eliminar la imagen.');
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
