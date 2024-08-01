@@ -12,7 +12,7 @@
         <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Imagen subida" width="300">
     </div>
     <h2>La planta está {{ predictions }}</h2>
-    <h2>Con una probabilidad de {{ confidence }}</h2>
+    
     <h2>Modelo utilizado: {{ model_name }}</h2>
     <div class="button-container">
         <button><a href="{{ url_for('index') }}">Volver</a></button>
